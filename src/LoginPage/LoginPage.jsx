@@ -4,16 +4,23 @@ import { Link } from 'react-router-dom';
 class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
-    console.log('EMAIL',e.target.email.value)
-    console.log('PASSWORD',e.target.email.value)
-    // fetch('http://localhost:8080/api/v1/users/login',{
-    //   method: 'post',
-    //   headers: {'Content-Type':'application/json'},
-    //   body: {
-    //     email:email.value,
-    //     password: password.value
-    //   }
-    // });
+    const { email, password } = e.target;
+    const userData = {
+      email: email.value,
+      password: password.value
+    }
+    const options = { 
+      method: 'post',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+         body: JSON.stringify(userData)
+    } 
+    fetch('http://localhost:8080/api/v1/users/login', options)
+      .then(response => {
+        console.log(response);
+      });
   }
 
   render() {
@@ -28,6 +35,7 @@ class Login extends Component {
                 name="email"
                 className="form-control" 
                 placeholder="Email"
+                required
                >
                 </input>
 
@@ -37,10 +45,11 @@ class Login extends Component {
                 name="password"
                 className="form-control" 
                 placeholder="Password"
+                required
                 >
                 </input>
             </div>
-              <button type="submit" className="btn btn-info">Login</button>
+              <button type="submit" className="btn btn-info mr-3">Login</button>
               <Link to="/register" className="btn btn-primary">Register</Link>
         </form>
       </div>

@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 
 export default class RegisterPage extends Component {
+  constructor(props){
+      super(props);
+      this.state = {
+          response : {}
+      }
+  }
   handleSubmit = e => {
     e.preventDefault();
     const { email,password,firstName } = e.target;
@@ -21,7 +27,9 @@ export default class RegisterPage extends Component {
       } 
     fetch('http://localhost:8080/api/v1/users',options)
       .then(response => {
-          console.log(response)
+          this.setState({
+              response
+          })
       });
       firstName.value ='';
       email.value='';
@@ -29,7 +37,7 @@ export default class RegisterPage extends Component {
   }
   render() {
     return (
-        <div className="container">
+        <div>
         <h2>Register</h2>
         <form onSubmit={this.handleSubmit}>
             <div className = "form-group">
@@ -39,6 +47,7 @@ export default class RegisterPage extends Component {
                 name="firstName"
                 className="form-control" 
                 placeholder="First Name"
+                required
                >
                 </input>
 
@@ -48,6 +57,7 @@ export default class RegisterPage extends Component {
                 name="email"
                 className="form-control" 
                 placeholder="Email"
+                required
                >
                 </input>
 
@@ -57,20 +67,19 @@ export default class RegisterPage extends Component {
                 name="password"
                 className="form-control" 
                 placeholder="Password"
+                required
                 >
                 </input>
             </div>
-                <button type="submit" className="btn btn-info">Register</button>
+                <button type="submit" className="btn btn-info mr-3">Register</button>
                 <Link to="/" className="btn btn-danger">Cancel</Link>
         </form>
-        {/* {
-            email && password !== '' ?
-            <div className = "container">
-                <p>Your email is : {email}</p>
-                <p>Your passwordis : {password}</p>
-             </div> :
-             <p>You didn't enter any personal data yet.</p>
-        } */}
+        { this.state.response.status === 201 ? <div class="alert alert-success" role="alert">
+            You seccessfully registered!
+            </div> : null }
+        { this.state.response.status >= 400 ? <div class="alert alert-danger mt-3" role="alert">
+            Bad data
+            </div> : null } 
       </div>
     )
   }

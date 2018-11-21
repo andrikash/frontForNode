@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+// import Navbar from "../Navbar/Navbar";
 
 class Login extends Component {
+  constructor(){
+    super();
+    this.state = {
+      response : { }
+    }
+  }
   handleSubmit = e => {
     e.preventDefault();
     const { email, password } = e.target;
@@ -18,12 +25,24 @@ class Login extends Component {
          body: JSON.stringify(userData)
     } 
     fetch('http://localhost:8080/api/v1/users/login', options)
-      .then(response => {
-        console.log(response);
+    .then(response => {
+      this.setState({
+        response
       });
-  }
 
+      //validate adding info into localStorage
+      console.log(response);
+        (response.json())
+          .then((data) => {
+            localStorage.setItem('currentID', data.user && data.user._id)
+          })
+    }
+  )
+      
+  }
+  
   render() {
+      console.log(this.state.response);
     return (
       <div className="container">
         <h2>Login</h2>
@@ -50,8 +69,14 @@ class Login extends Component {
                 </input>
             </div>
               <button type="submit" className="btn btn-info mr-3">Login</button>
-              <Link to="/register" className="btn btn-primary">Register</Link>
+              <Link to="/registration" className="btn btn-primary">Register</Link>
         </form>
+        { this.state.response.status === 200 ? <div className="alert alert-success mt-3" role="alert">
+            You seccessfully registered!
+            </div> : null }
+        { this.state.response.status >= 400 ? <div className="alert alert-danger mt-3" role="alert">
+            Bad data
+            </div> : null } 
       </div>
     );
   }

@@ -23,12 +23,11 @@ export default class RegisterPage extends Component {
           'Content-Type': 'application/json'
         },
            body: JSON.stringify(userData)
-      
       } 
     fetch('http://localhost:8080/api/v1/users',options)
       .then(response => {
           this.setState({
-              response
+             response
           })
       });
       firstName.value ='';
@@ -45,7 +44,7 @@ export default class RegisterPage extends Component {
                 <input 
                 type="test" 
                 name="firstName"
-                className="form-control" 
+                className="form-control " 
                 placeholder="First Name"
                 required
                >
@@ -72,12 +71,12 @@ export default class RegisterPage extends Component {
                 </input>
             </div>
                 <button type="submit" className="btn btn-info mr-3">Register</button>
-                <Link to="/" className="btn btn-danger">Cancel</Link>
+                <Link to="/" className="btn btn-danger">Login</Link>
         </form>
-        { this.state.response.status === 201 ? <div class="alert alert-success" role="alert">
+        { this.state.response.status === 201 ? <div className="alert alert-success mt-3" role="alert">
             You seccessfully registered!
             </div> : null }
-        { this.state.response.status >= 400 ? <div class="alert alert-danger mt-3" role="alert">
+        { this.state.response.status >= 400 ? <div className="alert alert-danger mt-3" role="alert">
             Bad data
             </div> : null } 
       </div>

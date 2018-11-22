@@ -1,136 +1,188 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class EditProfile extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             form: {
-                name: '',
-                email: ''
+                name: null,
+                email: null,
+                phone: null,
+                birthDate: null,
+                description: null
             },
-            responseUpdateUser : { },
-            responsePassword: { }
+            errorUpdateInfo: null,
+            messageUpdateInfo: null,
+            errorUpdatePassword: null,
+            messageUpdatePassword: null
         }
     }
-    componentDidMount(){
-        let id = localStorage.getItem('currentID');
-        if(id === undefined) {
-            id = ''
-        };
-        console.log(id);
-        fetch(`http://localhost:8080/api/v1/users/${id}`,{method: 'get'})
-        .then(response => response.json())
-        .then(data => this.setState({
-            form: { 
-                name : data.name,
-                email: data.email
-            }
-        }));
+    //Current user ID 
+    componentDidMount() {
+        const id = localStorage.getItem('currentID');
+        axios.get(`http://localhost:8080/api/v1/users/${id}`)
+            .then((response) => {
+                this.setState({
+                    form: {
+                        name: response.data.name,
+                        email: response.data.email,
+                        phone: response.data.phone,
+                        birthDate: response.data.dateOfBirth,
+                        description: response.data.description
+                    },
+                })
+            });
     }
+    //Changing password
     handleSubmitPassword = e => {
         e.preventDefault();
         const { password } = e.target
-        const passwordData = {
+        // console.log(password);
+        const id = localStorage.getItem('currentID');
+        axios.put(`http://localhost:8080/api/v1/users/changePassword/${id}`, {
             password: password.value
-        } 
-        const id = '5beed77bf6eec218c7f584be';
-        console.log(JSON.stringify(passwordData));
-        const options = { 
-            method: 'put',
-            body: JSON.stringify(passwordData)
-          }
-        fetch(`http://localhost:8080/api/v1/users/changePassword/${id}`,options)
-            .then(response => {
-                this.setState({
-                    password: response
-                })
-                console.log(response);
-            });
-        password.value = '';    
-     }
-
-    handleSubmit = e => {
-      e.preventDefault();
-      const { email,firstName } = e.target;
-
-      const userData = {
-          name:firstName.value,
-          email:email.value
-      };
-      const options = { 
-          method: 'put',
-          headers: {
-            'Accept': 'application/json, text/plain, */*',
-            'Content-Type': 'application/json'
-          },
-             body: JSON.stringify(userData)
-        } 
-      fetch('http://localhost:8080/api/v1/users/5beed7fbf6eec218c7f584c1',options)
-        .then(response => {
+        }).then(() => {
             this.setState({
-                responseUpdateUser : response
+                messageUpdatePassword: 'Successful change password',
+                errorUpdateInfo: null
+            })
+        }).catch(() => {
+            this.setState({
+                errorUpdatePassword: 'Bad data',
+                messageUpdatePassword: null
             })
         });
-        firstName.value ='';
-        email.value='';
+        password.value = '';
+    }
+    //Changing user's info 
+    handleSubmit = e => {
+        e.preventDefault();
+        const { email, firstName, phone, birthDate, description } = e.target;
+        const id = localStorage.getItem('currentID');
+
+
+        axios.put(`http://localhost:8080/api/v1/users/${id}`, {
+            name: firstName.value,
+            email: email.value,
+            phone: phone.value,
+            dateOfBirth: birthDate.value,
+            description: description.value
+        }).then(() =>
+            this.setState({
+                messageUpdateInfo: 'Successfuly changed user\'s info',
+                errorUpdateInfo: null
+
+            })).catch(() =>
+                this.setState({
+                    errorUpdateInfo: 'Bad data',
+                    messageUpdateInfo: null
+                }));
     }
 
     changeState = (ev) => {
         this.setState({
-            form : {
+            form: {
                 name: ev.currentTarget.value.name,
-                email: ev.currentTarget.value.email
+                email: ev.currentTarget.value.email,
+                phone: ev.currentTarget.value.phone,
+                birthDate: ev.currentTarget.value.birthDate,
+                description: ev.currentTarget.value.description
             }
         })
     }
 
+    render() {
+        return (
+            <div>
+                <h2>Edit profile</h2>
+                <form onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label>Name</label>
+                        <input
+                            type="text"
+                            name="firstName"
+                            className="form-control"
+                            placeholder="First Name"
+                            onChange={this.changeState}
+                            value={this.state.form.name}
+                        >
+                        </input>
 
-  render() {
-    return (
-        <div>
-        <h2>Edit profile</h2>
-        <form onSubmit={this.handleSubmit}>
-            <div className = "form-group">
-                <label>Name</label>
-                <input 
-                type="text" 
-                name="firstName"
-                className="form-control" 
-                placeholder="First Name"
-                onChange={this.changeState}
-                value={this.state.form.name}
-               >
-                </input>
-                
-                <label>Email</label>
-                <input 
-                type="email" 
-                name="email"
-                className="form-control" 
-                placeholder="Email"
-                onChange={this.changeState}
-                value={this.state.form.email}
-               >
-                </input>
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            className="form-control"
+                            placeholder="Email"
+                            onChange={this.changeState}
+                            value={this.state.form.email}
+                        >
+                        </input>
+
+                        <label>Phone</label>
+                        <input
+                            type="tel"
+                            name="phone"
+                            className="form-control"
+                            placeholder="Phone"
+                            onChange={this.changeState}
+                            value={this.state.form.phone}
+                        >
+                        </input>
+
+                        <label>Date of Birth</label>
+                        <input
+                            type="text"
+                            name="birthDate"
+                            className="form-control"
+                            placeholder="Date of Birth"
+                            onChange={this.changeState}
+                            value={this.state.form.dateOfBirth}
+                        >
+                        </input>
+
+                        <label>Description</label>
+                        <input
+                            type="text"
+                            name="description"
+                            className="form-control"
+                            placeholder="Description"
+                            onChange={this.changeState}
+                            value={this.state.form.description}
+                        >
+                        </input>
+                    </div>
+                    {/* Message for users */}
+                    {this.state.messageUpdateInfo && <div className="alert alert-success mt-3" role="alert">
+                        {this.state.messageUpdateInfo}
+                    </div>}
+                    {this.state.errorUpdateInfo && <div className="alert alert-danger mt-3" role="alert">
+                        {this.state.errorUpdateInfo}
+                    </div>}
+                    <button type="submit" className="btn btn-info">Edit profile</button>
+                </form>
+                <form onSubmit={this.handleSubmitPassword} className="mt-3">
+                    <div className="form-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            className="form-control"
+                            placeholder="Password"
+                        >
+                        </input>
+                    </div>
+                    {/* Message for users */}
+                    {this.state.messageUpdatePassword && <div className="alert alert-success mt-3" role="alert">
+                        {this.state.messageUpdatePassword}
+                    </div>}
+                    {this.state.errorUpdatePassword && <div className="alert alert-danger mt-3" role="alert">
+                        {this.state.errorUpdatePassword}
+                    </div>}
+                    <button type="submit" className="btn btn-danger mr-3">Change password</button>
+                </form>
             </div>
-                <button type="submit" className="btn btn-info mr-3">Edit profile</button>
-                {/* <Link to="/" className="btn btn-danger">Login</Link> */}
-        </form>
-        <form onSubmit={this.handleSubmitPassword} className="mt-3">
-            <div className = "form-group">
-                <label>Password</label>
-                <input 
-                type="password" 
-                name="password"
-                className="form-control" 
-                placeholder="Password"
-               >
-                </input>
-            </div>
-                <button type="submit" className="btn btn-danger mr-3">Change password</button>
-                {/* <Link to="/" className="btn btn-danger">Login</Link> */}
-        </form>
-      </div>
-    )
-  }
+        )
+    }
 }

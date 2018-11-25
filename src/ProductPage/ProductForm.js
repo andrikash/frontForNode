@@ -1,13 +1,23 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+import history from '../utils/history';
+// import { API_URL } from ''
 
 export default class ProductPage extends Component {
+    componentDidMount(){
+        const token = localStorage.getItem('token');
+        axios.get('http://localhost:8080/api/v1/products',{},{
+            headers: {
+                authorization: 'bearer ' + token
+            }
+        })
+    }
 
     handleSubmit = e => {
         e.preventDefault();
         const { productName, price, description } = e.target
         const token = localStorage.getItem('token');
-        console.log(token);
+        // console.log(token);
         axios.post('http://localhost:8080/api/v1/products', {
             productName: productName.value,
             price: price.value,
@@ -17,11 +27,13 @@ export default class ProductPage extends Component {
                 headers: {
                     authorization: 'bearer ' + token
                 }
-            }).then(response => console.log(response))
-    }
+            }).then(response => console.log(response),
+                history.push("/productPage")
+            )
+        }  
     render() {
         return (
-            <div>
+            <div className="container col-8">
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <h2>Add new product</h2>
@@ -60,6 +72,10 @@ export default class ProductPage extends Component {
                         <button type="submit" className="btn btn-info mt-3">Edit profile</button>
                     </div>
                 </form>
+
+                {/* Product list */}
+
+
             </div>
         )
     }

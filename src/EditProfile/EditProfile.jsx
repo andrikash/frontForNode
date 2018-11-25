@@ -25,12 +25,12 @@ export default class EditProfile extends Component {
             .then((response) => {
                 this.setState({
                     form: {
-                        name: response.data.name,
-                        email: response.data.email,
-                        phone: response.data.phone,
-                        birthDate: response.data.dateOfBirth,
+                        name: response.data.result.name,
+                        email: response.data.result.email,
+                        phone: response.data.result.phone,
+                        birthDate: response.data.result.dateOfBirth,
                         description: response.data.description
-                    },
+                    }
                 })
             });
     }
@@ -40,7 +40,7 @@ export default class EditProfile extends Component {
         const { password } = e.target
         // console.log(password);
         const id = localStorage.getItem('currentID');
-        axios.put(`http://localhost:8080/api/v1/users/changePassword/${id}`, {
+        axios.put(`http://localhost:8080/api/v1/auth/changePassword/${id}`, {
             password: password.value
         }).then(() => {
             this.setState({
@@ -94,7 +94,7 @@ export default class EditProfile extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container col-6">
                 <h2>Edit profile</h2>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
@@ -105,7 +105,7 @@ export default class EditProfile extends Component {
                             className="form-control"
                             placeholder="First Name"
                             onChange={this.changeState}
-                            value={this.state.form.name}
+                            value={this.state.form ? this.state.form.name: ""}
                         >
                         </input>
 
@@ -116,7 +116,7 @@ export default class EditProfile extends Component {
                             className="form-control"
                             placeholder="Email"
                             onChange={this.changeState}
-                            value={this.state.form.email}
+                            value={this.state.form ? this.state.form.email : ""}
                         >
                         </input>
 
@@ -127,7 +127,7 @@ export default class EditProfile extends Component {
                             className="form-control"
                             placeholder="Phone"
                             onChange={this.changeState}
-                            value={this.state.form.phone}
+                            value={this.state.form ? this.state.form.phone : ""}
                         >
                         </input>
 
@@ -138,7 +138,7 @@ export default class EditProfile extends Component {
                             className="form-control"
                             placeholder="Date of Birth"
                             onChange={this.changeState}
-                            value={this.state.form.dateOfBirth}
+                            value={this.state.form ? this.state.form.dateOfBirth : ""}
                         >
                         </input>
 
@@ -149,7 +149,7 @@ export default class EditProfile extends Component {
                             className="form-control"
                             placeholder="Description"
                             onChange={this.changeState}
-                            value={this.state.form.description}
+                            value={this.state.form ? this.state.form.description : ""}
                         >
                         </input>
                     </div>

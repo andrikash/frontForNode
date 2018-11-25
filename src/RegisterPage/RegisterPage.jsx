@@ -14,7 +14,7 @@ export default class RegisterPage extends Component {
     handleSubmit = e => {
         e.preventDefault();
         const { email, password, firstName } = e.target;
-        axios.post('http://localhost:8080/api/v1/users', {
+        axios.post('http://localhost:8080/api/v1/auth/registration', {
             name: firstName.value,
             email: email.value,
             password: password.value
@@ -36,8 +36,8 @@ export default class RegisterPage extends Component {
     }
     render() {
         return (
-            <div>
-                <h2>Register</h2>
+            <div className="container col-6">
+                <h2>Registration</h2>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <label>First Name</label>
@@ -70,7 +70,7 @@ export default class RegisterPage extends Component {
                         >
                         </input>
                     </div>
-                    <button type="submit" className="btn btn-info mr-3">Register</button>
+                    <button type="submit" className="btn btn-info mr-3">Registration</button>
                     <Link to="/" className="btn btn-danger">Login</Link>
                 </form>
                 {/* Message for users */}

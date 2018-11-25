@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
+import history from '../utils/history';
 import axios from 'axios';
 
 class Login extends Component {
@@ -14,30 +15,33 @@ class Login extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { email, password } = e.target;
-    axios.post('http://localhost:8080/api/v1/users/login', {
+    axios.post('http://localhost:8080/api/v1/auth/login', {
       email: email.value,
       password: password.value
-    }).then((response) =>
+    }).then((response) => {
       this.setState({
         message: 'Successfully logged!',
         error: null
       },
       localStorage.setItem('currentID',response.data.user._id),
-      localStorage.setItem('token',response.data.token)
+      localStorage.setItem('token',response.data.token),
+      history.push('/editProfile'),
+      this.props.updateToken()
       )
-    ).catch(() =>
-      this.setState({
-        error: 'Error',
-        message: null
-      })
+    }).catch((error) => {
+        this.setState({
+          error: error.response.statusText,
+          message: null
+        })
+      }
     )
   }
   render() {
     // console.log(this.state.response);
     return (
-      <div className="container">
+      <div className="container col-6">
         <h2>Login</h2>
-        <form onSubmit={this.handleSubmit}>
+        <form action="/registration" method="get" onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Username</label>
             <input
@@ -59,8 +63,8 @@ class Login extends Component {
             >
             </input>
           </div>
-          <button type="submit" className="btn btn-info mr-3">Login</button>
-          <Link to="/registration" className="btn btn-primary">Register</Link>
+          <input type="submit" className="btn btn-info mr-3" value="Login"/>
+          <Link to="/registration" className="btn btn-primary">Registration</Link>
         </form>
         {/* Message for users */}
         {this.state.message && <div className="alert alert-success mt-3" role="alert">

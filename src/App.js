@@ -1,30 +1,45 @@
 import React, { Component } from 'react';
 import Login from './LoginPage/LoginPage.jsx';
-import RegisterPage  from './RegisterPage/RegisterPage.jsx'
-import Navbar from './Navbar/Navbar.jsx'
-import ProductPage from './ProductPage/ProductPage.jsx'
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import RegisterPage  from './RegisterPage/RegisterPage.jsx';
+import Navbar from './Navbar/Navbar';
+// import ProductPage from './ProductPage/ProductPage.js';
+import { Router, Switch } from 'react-router-dom';
 import EditProfile from './EditProfile/EditProfile.jsx';
-
-
+import PublicRoute from './services/publicRoute';
+import PrivateRoute from './services/privateRoute';
+import ProductPage from './Products/ProductPage'
+import ProductAdd from './ProductPage/ProductForm'
+import history from "./utils/history"
 class App extends Component {
   constructor(props){
     super();
+    this.state = {
+      token: localStorage.getItem('token')
+    }
+    console.log(localStorage.getItem('token'))
   }
+  updateToken = () => {
+    this.setState({
+      token: localStorage.getItem('token')
+    })
+  }
+
   render() {
-    // const { response } = this.state;
-    return (
+    const { token } = this.state;
+    return ( 
       <div>
-        <Navbar />
-      <div className="container col-6">
-        <BrowserRouter>
+        <Navbar isLogged={Boolean(token)}/>
+      <div className="container col-10">
+        <Router history={history}>
           <Switch>
-            <Route path="/" exact = { true } component = { Login } />
-            <Route path="/registration" component = { RegisterPage } />
-            <Route path="/editProfile" component = { EditProfile } />
-            <Route path="/productPage" component = { ProductPage } />
+            <PublicRoute path="/" exact component={ Login } isLogin={Boolean(token)} updateToken={this.updateToken}/>
+            <PublicRoute path="/registration" component = { RegisterPage } isLogin={Boolean(token)} />
+            <PrivateRoute path="/editProfile" component = { EditProfile } isLogin={Boolean(token)} />
+            <PrivateRoute path="/productPage" component = { ProductPage } isLogin={Boolean(token)} />
+            <PrivateRoute path="/addProduct" component = { ProductAdd } isLogin={Boolean(token)} />
+            <PrivateRoute path="/logout" isLogin={Boolean(token)} />
           </Switch>
-        </BrowserRouter>
+        </Router>
         {/*list of users*/}                                                                                                                                                                                                                  
         
         {/* 

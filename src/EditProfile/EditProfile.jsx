@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import * as api from '../utils/api';
 
 export default class EditProfile extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export default class EditProfile extends Component {
     //Current user ID 
     componentDidMount() {
         const id = localStorage.getItem('currentID');
-        axios.get(`http://localhost:8080/api/v1/users/${id}`)
+        api.User.currentUser(id)
             .then((response) => {
                 this.setState({
                     form: {
@@ -38,9 +38,8 @@ export default class EditProfile extends Component {
     handleSubmitPassword = e => {
         e.preventDefault();
         const { password } = e.target
-        // console.log(password);
         const id = localStorage.getItem('currentID');
-        axios.put(`http://localhost:8080/api/v1/auth/changePassword/${id}`, {
+        api.User.changePassword(id,{
             password: password.value
         }).then(() => {
             this.setState({
@@ -61,23 +60,22 @@ export default class EditProfile extends Component {
         const { email, firstName, phone, birthDate, description } = e.target;
         const id = localStorage.getItem('currentID');
 
-
-        axios.put(`http://localhost:8080/api/v1/users/${id}`, {
-            name: firstName.value,
+        api.User.updateUser(id, 
+            {name: firstName.value,
             email: email.value,
             phone: phone.value,
             dateOfBirth: birthDate.value,
-            description: description.value
-        }).then(() =>
+            description: description.value})
+        .then(() =>
             this.setState({
                 messageUpdateInfo: 'Successfuly changed user\'s info',
                 errorUpdateInfo: null
 
-            })).catch(() =>
-                this.setState({
-                    errorUpdateInfo: 'Bad data',
-                    messageUpdateInfo: null
-                }));
+        })).catch(() =>
+            this.setState({
+                errorUpdateInfo: 'Bad data',
+                messageUpdateInfo: null
+            }));
     }
 
     changeState = (ev) => {

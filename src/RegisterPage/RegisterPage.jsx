@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-
+import * as api from '../utils/api';
 export default class RegisterPage extends Component {
     constructor(props) {
         super(props);
@@ -14,11 +13,11 @@ export default class RegisterPage extends Component {
     handleSubmit = e => {
         e.preventDefault();
         const { email, password, firstName } = e.target;
-        axios.post('http://localhost:8080/api/v1/auth/registration', {
-            name: firstName.value,
+        api.User.register(
+            {name: firstName.value,
             email: email.value,
-            password: password.value
-        }).then(() =>
+            password: password.value})
+        .then(() =>
             this.setState({
                 message: 'Successfully registered!',
                 error: null
@@ -32,7 +31,6 @@ export default class RegisterPage extends Component {
         firstName.value = '';
         email.value = '';
         password.value = '';
-
     }
     render() {
         return (

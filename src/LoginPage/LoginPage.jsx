@@ -1,44 +1,21 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
 import history from '../utils/history';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { authAction } from '../store/actions/auth';
 
 class Login extends Component {
-  constructor() {
-    super();
-    this.state = {
-      error: null,
-      message: null
-    }
-  }
-  //Login request
   handleSubmit = e => {
     e.preventDefault();
     const { email, password } = e.target;
-    axios.post('http://localhost:8080/api/v1/auth/login', {
-      email: email.value,
-      password: password.value
-    }).then((response) => {
-      this.setState({
-        message: 'Successfully logged!',
-        error: null
-      },
-      localStorage.setItem('currentID',response.data.user._id),
-      localStorage.setItem('token',response.data.token),
-      history.push('/editProfile'),
-      this.props.updateToken()
-      )
-    }).catch((error) => {
-        this.setState({
-          error: error.response.statusText,
-          message: null
-        })
-      }
-    )
+    const { authFunction } = this.props;
+    authFunction(email, password).then((res) => {
+      history.push('/editProfile');
+    });
   }
+
   render() {
-    // console.log(this.state.response);
-    return (
+     return (
       <div className="container col-6">
         <h2>Login</h2>
         <form action="/registration" method="get" onSubmit={this.handleSubmit}>
@@ -66,16 +43,17 @@ class Login extends Component {
           <input type="submit" className="btn btn-info mr-3" value="Login"/>
           <Link to="/registration" className="btn btn-primary">Registration</Link>
         </form>
-        {/* Message for users */}
-        {this.state.message && <div className="alert alert-success mt-3" role="alert">
-          {this.state.message}
-        </div>}
-        {this.state.error && <div className="alert alert-danger mt-3" role="alert">
-          {this.state.error}
-        </div>}
       </div>
     );
   }
 }
 
-export default Login;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+const mapDispatchToProps = dispatch => ({
+  authFunction: (email, password) => dispatch(authAction(email, password))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -4,6 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 export default function PrivateRoute({
   component: Component,
   isLogin,
+  payload,
   ...rest
 }) {
   return (
@@ -11,7 +12,7 @@ export default function PrivateRoute({
       {...rest}
       render={props =>
         Boolean(localStorage.getItem('token')) === true ? (
-          <Component {...props} {...rest} />
+          <Component {...props} {...rest} payload={payload}/>
         ) : (
           <Redirect to="/" />
         )

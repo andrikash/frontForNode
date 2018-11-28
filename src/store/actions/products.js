@@ -38,10 +38,11 @@ export const productsDelete = (id) => dispatch => {
       )
 }
 export const productsGetOne = (id) => dispatch => {
+    console.log(id, 'ID INSIDE ACTION');
     dispatch({
         type: actionTypes.PRODUCTS_GETONE_START,
     });
-    return api.Product.deleteProduct(id)
+    return api.Product.currentProduct(id)
         .then((response) => {
         dispatch({
             type: actionTypes.PRODUCTS_GETONE_SUCCESS,
@@ -54,4 +55,11 @@ export const productsGetOne = (id) => dispatch => {
         });
         }
       )
+}
+export const updateData = (data) => dispatch => {
+    
+        dispatch({
+            type: actionTypes.PRODUCTS_GETONE_SUCCESS,
+            payload: data
+        })
 }

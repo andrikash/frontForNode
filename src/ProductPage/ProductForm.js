@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import history from '../utils/history';
 import * as api from '../utils/api';
 import { connect } from 'react-redux';
-import { productsGetOne } from '../store/actions/products';
+import { productsGetOne, updateData } from '../store/actions/products';
 
 class ProductPage extends Component {
     
@@ -22,7 +22,10 @@ class ProductPage extends Component {
     componentDidMount(){
         // Redux! Remvoe it at all
         const { id } = this.props.match.params;
+        console.log(id, 'ID HERE');
         if(Boolean(id)){
+            console.log(id, 'ID INSIDE FORM')
+            const { productsGetOne } = this.props;
             productsGetOne(id);
         }
         ////
@@ -52,16 +55,15 @@ class ProductPage extends Component {
         ////
         }  
         changeState = (ev) => {
-            this.setState({
-                form: {
+            const { updateData } = this.props;
+            updateData({
                     productName: ev.currentTarget.value.productName,
                     price: ev.currentTarget.value.price,
                     about: ev.currentTarget.value.description
-                }
             })
         }
     render() {
-    const { products } = this.props;
+    const { productName, price, about } = this.props.products.data;
         return (
             <div className="container col-8">
                 <form onSubmit={this.handleSubmit}>
@@ -74,7 +76,7 @@ class ProductPage extends Component {
                             className="form-control"
                             placeholder="Product name"
                         onChange={this.changeState}
-                        value={products.productName}
+                        value={productName}
                         >
                         </input>
 
@@ -85,7 +87,7 @@ class ProductPage extends Component {
                             className="form-control"
                             placeholder="Price"
                         onChange={this.changeState}
-                        value={products.price}
+                        value={price}
                         >
                         </input>
 
@@ -96,7 +98,7 @@ class ProductPage extends Component {
                             className="form-control"
                             placeholder="Discription"
                         onChange={this.changeState}
-                        value={products.description}
+                        value={about}
                         >
                         </input>
                         <button type="submit" className="btn btn-info mt-3">{this.props.payload} product</button>
@@ -111,7 +113,8 @@ const mapStateToProps = state => ({
   });
   
   const mapDispatchToProps = dispatch => ({
-    productsGetOne: () => dispatch(productsGetOne())
+    productsGetOne: (id) => dispatch(productsGetOne(id)),
+    updateData: (data) => dispatch(updateData(data)),
   })
   
   export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

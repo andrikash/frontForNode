@@ -9,7 +9,7 @@ import * as serviceWorker from './serviceWorker';
 
 import authReducer from './store/reducers/auth';
 import productsReducer from './store/reducers/products';
-console.log('productsReducer', productsReducer)
+
 const rootReducer = combineReducers({
     auth: authReducer,
     products: productsReducer

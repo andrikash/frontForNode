@@ -9,7 +9,6 @@ export const authAction = (email, password) => dispatch => {
         {email: email.value,
         password: password.value})
         .then((response) => {
-
         localStorage.setItem('currentID',response.data.user._id);
         localStorage.setItem('token',response.data.token);
         dispatch({

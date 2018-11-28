@@ -48,6 +48,7 @@ const reducer = (state = initialState, action) => {
                 loading: true
             };
         case actionTypes.PRODUCTS_GETONE_SUCCESS:
+        console.log(action.payload , 'PAYYYY')
             return {
                 ...state,
                 data: action.payload,

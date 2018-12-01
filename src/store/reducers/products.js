@@ -2,6 +2,9 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     data: [],
+    currentProduct: null,
+    addData: null,
+    deleteData: null,
     loading: false,
     error: null
 };
@@ -25,6 +28,23 @@ const reducer = (state = initialState, action) => {
                 error: action.payload,
                 loading: false,
             }
+        case actionTypes.PRODUCT_ADD_START:
+            return {
+                ...state,
+                loading: true
+            };
+        case actionTypes.PRODUCT_ADD_SUCCESS:
+            return {
+                ...state,
+                addData: action.payload,
+                loading: false,
+            }
+        case actionTypes.PRODUCT_ADD_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+            }
         case actionTypes.PRODUCTS_DELETE_START:
             return {
                 ...state,
@@ -33,7 +53,7 @@ const reducer = (state = initialState, action) => {
         case actionTypes.PRODUCTS_DELETE_SUCCESS:
             return {
                 ...state,
-                data: action.payload,
+                deleteData: action.payload,
                 loading: false,
             }
         case actionTypes.PRODUCTS_DELETE_ERROR:
@@ -48,13 +68,29 @@ const reducer = (state = initialState, action) => {
                 loading: true
             };
         case actionTypes.PRODUCTS_GETONE_SUCCESS:
-        console.log(action.payload , 'PAYYYY')
             return {
                 ...state,
-                data: action.payload,
+                currentProduct: action.payload,
                 loading: false,
             }
         case actionTypes.PRODUCTS_GETONE_ERROR:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false,
+            }
+            case actionTypes.PRODUCTS_UPDATE_ONE_START:
+            return {
+                ...state,
+                loading: true
+            };
+        case actionTypes.PRODUCTS_UPDATE_ONE_SUCCESS:
+            return {
+                ...state,
+                currentProduct: action.payload,
+                loading: false,
+            }
+        case actionTypes.PRODUCTS_UPDATE_ONE_ERROR:
             return {
                 ...state,
                 error: action.payload,

@@ -11,7 +11,7 @@ export default function PublicRoute({
       {...rest}
       render={props =>
         Boolean(localStorage.getItem('token')) === false ? (
-          <Component {...props} {...rest} />
+          <Component {...props} {...rest}/>
         ) : (
           <Redirect to="/editProfile" />
         )

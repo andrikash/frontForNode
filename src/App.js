@@ -3,7 +3,7 @@ import Login from './LoginPage/LoginPage.jsx';
 import RegisterPage  from './RegisterPage/RegisterPage.jsx';
 import Navbar from './Navbar/Navbar';
 import { Router, Switch } from 'react-router-dom';
-import EditProfile from './EditProfile/EditProfile.jsx';
+import EditProfile from './EditProfile/EditProfile';
 import PublicRoute from './services/publicRoute';
 import PrivateRoute from './services/privateRoute';
 import ProductPage from './Products/ProductPage';
@@ -15,7 +15,6 @@ class App extends Component {
     this.state = {
       token: localStorage.getItem('token')
     }
-    console.log(localStorage.getItem('token'))
   }
   updateToken = () => {
     this.setState({

@@ -1,72 +1,69 @@
 import React, { Component } from 'react';
 import history from '../utils/history';
-import * as api from '../utils/api';
 import { connect } from 'react-redux';
-import { productsGetOne, updateData } from '../store/actions/products';
+import { productsGetOne, productUpdate, productAdd } from '../store/actions/products';
 
 class ProductPage extends Component {
-    
-    constructor(){
-        super();
-        // Remove
+    constructor(props) {
+        super(props);
         this.state = {
-            form: {
-                productName: null,
-                price: null,
-                description: null
-            }
+            currentProduct: null
         }
-        ////
     }
     //Current product
     componentDidMount(){
-        // Redux! Remvoe it at all
         const { id } = this.props.match.params;
-        console.log(id, 'ID HERE');
         if(Boolean(id)){
-            console.log(id, 'ID INSIDE FORM')
             const { productsGetOne } = this.props;
             productsGetOne(id);
         }
-        ////
     }
-    handleSubmit = e => {
-        e.preventDefault(); // Remove
-        const id = this.props.match.params.id; // Remove, Use Redux
-        const { productName, price, description } = e.target // Remvoe, Use Redux
-        console.log(productName.value, price.value, description.value);
+    handleSubmit = () => {
+        const { id }  = this.props.match.params;
+        const { productName, price, description } = this.state.currentProduct;
+        const { productUpdate, productAdd } = this.props;
+
         if(Boolean(id)) {
-            api.Product.updateProduct(id,{
-                productName: productName.value,
-                price: price.value,
-                about: description.value
+            const { productName, price, description } = this.state.currentProduct;
+            return productUpdate(id,{
+                productName,
+                price,
+                about: description
             }).then(() => {
                 history.push("/productPage")
             })
-        }else {
-            api.Product.addProduct({ 
-                productName: productName.value,
-                price: price.value,
-                about: description.value
-            }).then(response => console.log(response),
-                history.push("/productPage")
-            )
         }
-        ////
-        }  
+            return productAdd({
+                productName,
+                price,
+                about: description
+            }).then(() => {
+                 history.push('/productPage');
+            });
+        }
         changeState = (ev) => {
-            const { updateData } = this.props;
-            updateData({
-                    productName: ev.currentTarget.value.productName,
-                    price: ev.currentTarget.value.price,
-                    about: ev.currentTarget.value.description
-            })
+            const { name, value } = ev.target;
+
+            this.setState(prevState => ({
+                ...prevState,
+                currentProduct: {
+                    ...prevState.currentProduct,
+                    [name]: value,
+                }
+            }))
         }
+        componentWillReceiveProps(newProps) {
+            console.log(newProps.products.currentProduct, 'PRODUCTS');
+            if (newProps.products.currentProduct) {
+                this.setState({ currentProduct: newProps.products.currentProduct })
+            }
+        }
+        
     render() {
-    const { productName, price, about } = this.props.products.data;
+    const { productName = null, price = null, about = null } = this.state.currentProduct || {};
+    console.log(this.state.currentProduct, 'qqq')
         return (
             <div className="container col-8">
-                <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
                         <h2>{this.props.payload} new product</h2>
                         <label>Product name</label>
@@ -75,7 +72,7 @@ class ProductPage extends Component {
                             name="productName"
                             className="form-control"
                             placeholder="Product name"
-                        onChange={this.changeState}
+                        onChange={(e) => this.changeState(e)}
                         value={productName}
                         >
                         </input>
@@ -101,9 +98,8 @@ class ProductPage extends Component {
                         value={about}
                         >
                         </input>
-                        <button type="submit" className="btn btn-info mt-3">{this.props.payload} product</button>
+                        <button type="button" onClick={this.handleSubmit} className="btn btn-info mt-3">{this.props.payload} product</button>
                     </div>
-                </form>
             </div>
         )
     }
@@ -114,7 +110,8 @@ const mapStateToProps = state => ({
   
   const mapDispatchToProps = dispatch => ({
     productsGetOne: (id) => dispatch(productsGetOne(id)),
-    updateData: (data) => dispatch(updateData(data)),
+    productUpdate: (id, data) => dispatch(productUpdate(id, data)),
+    productAdd: (data) => dispatch(productAdd(data)),
   })
   
   export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);

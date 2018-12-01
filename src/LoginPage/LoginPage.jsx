@@ -1,26 +1,43 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom';
-import history from '../utils/history';
 import { connect } from 'react-redux';
-import { authAction } from '../store/actions/auth';
+import { loginAction } from '../store/actions/auth';
 
 class Login extends Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    const { email, password } = e.target;
-    const { authFunction } = this.props;
-    authFunction(email, password).then((res) => {
-      history.push('/editProfile');
-    });
+  constructor(props){
+    super(props);
+    this.state = {
+      email: null,
+      password: null
+    }
   }
 
+  handleSubmit = () => {
+    const { email, password } = this.state;
+    const { login } = this.props;
+    //Redux action
+    if( email, password ){
+    login(email, password);
+    }
+  }
+
+  handleChange = (e) => {
+    const { name, value } = e.target;
+    this.setState(prevState => ({
+      ...prevState,
+      [name]: value,
+      }))
+  };
+
   render() {
-    const { auth } = this.props;
-    console.log(auth, 'AUTH')
+    const { loading } = this.props.auth;
+    console.log(loading, 'LOADING ');
      return (
       <div className="container col-6">
+          {
+            loading && <div>Loading...</div>
+          }
         <h2>Login</h2>
-        <form action="/registration" method="get" onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Username</label>
             <input
@@ -28,23 +45,29 @@ class Login extends Component {
               name="email"
               className="form-control"
               placeholder="Email"
+              onChange={this.handleChange}
               required
             >
             </input>
-
+                
             <label>Password</label>
             <input
               type="password"
               name="password"
               className="form-control"
               placeholder="Password"
+              onChange={this.handleChange}
               required
             >
             </input>
           </div>
-          <input type="submit" className="btn btn-info mr-3" value="Login"/>
+          <button type="button" className="btn btn-info mr-3" onClick={this.handleSubmit}>Login</button>
           <Link to="/registration" className="btn btn-primary">Registration</Link>
-        </form>
+          {
+            this.props.auth.error && <div className="alert alert-danger mt-3">
+              Wrong data!
+            </div>
+          }
       </div>
     );
   }
@@ -55,7 +78,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  authFunction: (email, password) => dispatch(authAction(email, password))
+  login: (email, password) => dispatch(loginAction(email, password))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -29,6 +29,7 @@ export const productsDelete = (id) => dispatch => {
             type: actionTypes.PRODUCTS_DELETE_SUCCESS,
             payload: response.data
         });
+        dispatch(productsAction());
       }).catch((error) => {
         dispatch({
             type: actionTypes.PRODUCTS_DELETE_ERROR,
@@ -38,7 +39,6 @@ export const productsDelete = (id) => dispatch => {
       )
 }
 export const productsGetOne = (id) => dispatch => {
-    console.log(id, 'ID INSIDE ACTION');
     dispatch({
         type: actionTypes.PRODUCTS_GETONE_START,
     });
@@ -56,10 +56,43 @@ export const productsGetOne = (id) => dispatch => {
         }
       )
 }
-export const updateData = (data) => dispatch => {
-    
+export const productUpdate = (id, data) => dispatch => {
+    dispatch({
+        type: actionTypes.PRODUCTS_UPDATE_ONE_START,
+    });
+    return api.Product.updateProduct(id, data)
+        .then((response) => {
         dispatch({
-            type: actionTypes.PRODUCTS_GETONE_SUCCESS,
-            payload: data
-        })
+            type: actionTypes.PRODUCTS_UPDATE_ONE_SUCCESS,
+            payload: response.data
+        });
+      }).catch((error) => {
+        dispatch({
+            type: actionTypes.PRODUCTS_UPDATE_ONE_ERROR,
+            payload: error
+        });
+        }
+      )
+}
+export const productAdd = (data) => dispatch => {
+
+    console.log(data, 'INSIDE ACTION')
+    dispatch({
+        type: actionTypes.PRODUCT_ADD_START,
+    });
+    return api.Product.addProduct( data )
+        .then((response) => {
+        dispatch({
+            type: actionTypes.PRODUCT_ADD_SUCCESS,
+            payload: response.data
+        });
+        return Promise.resolve(response);
+      }).catch((error) => {
+        dispatch({
+            type: actionTypes.PRODUCT_ADD_ERROR,
+            payload: error
+        });
+        }
+      )
+
 }

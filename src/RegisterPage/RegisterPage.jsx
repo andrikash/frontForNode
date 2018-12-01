@@ -1,50 +1,46 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import * as api from '../utils/api';
-export default class RegisterPage extends Component {
+
+import { connect } from 'react-redux';
+import { registrationAction } from '../store/actions/auth';
+class RegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: null,
-            message: null
+            name: null,
+            email: null,
+            password: null,
         }
     }
+    handleChange = (e) => {
+        const { name, value } = e.target;
+        this.setState(prevState => ({
+            ...prevState,
+            [name]: value,
+        }))
+    };
     //Registration request
-    handleSubmit = e => {
-        e.preventDefault();
-        const { email, password, firstName } = e.target;
-        api.User.register(
-            {name: firstName.value,
-            email: email.value,
-            password: password.value})
-        .then(() =>
-            this.setState({
-                message: 'Successfully registered!',
-                error: null
-            })
-        ).catch(() =>
-            this.setState({
-                error: 'Error',
-                message: null
-            })
-        )
-        firstName.value = '';
-        email.value = '';
-        password.value = '';
+    handleSubmit = () => {
+        const { name, email, password } = this.state;
+        const { register } = this.props;
+        if(name, email, password) {
+            register({name,email,password});
+        }
     }
     render() {
         return (
             <div className="container col-6">
                 <h2>Registration</h2>
-                <form onSubmit={this.handleSubmit}>
+                
                     <div className="form-group">
                         <label>First Name</label>
                         <input
                             type="test"
-                            name="firstName"
+                            name="name"
                             className="form-control "
                             placeholder="First Name"
                             required
+                            onChange={this.handleChange}
                         >
                         </input>
 
@@ -55,6 +51,7 @@ export default class RegisterPage extends Component {
                             className="form-control"
                             placeholder="Email"
                             required
+                            onChange={this.handleChange}
                         >
                         </input>
 
@@ -65,21 +62,30 @@ export default class RegisterPage extends Component {
                             className="form-control"
                             placeholder="Password"
                             required
+                            onChange={this.handleChange}
                         >
                         </input>
                     </div>
-                    <button type="submit" className="btn btn-info mr-3">Registration</button>
+                    <button type="submit" className="btn btn-info mr-3" onClick={this.handleSubmit}>Registration</button>
                     <Link to="/" className="btn btn-danger">Login</Link>
-                </form>
+                
                 {/* Message for users */}
-                {this.state.message && <div className="alert alert-success mt-3" role="alert">
-                    {this.state.message}
+                {this.props.auth.user && <div className="alert alert-success mt-3" role="alert">
+                    {this.props.auth.user.statusText}
                 </div>}
-                {this.state.error && <div className="alert alert-danger mt-3" role="alert">
-                    {this.state.error}
+                {this.props.auth.error && <div className="alert alert-danger mt-3" role="alert">
+                    {this.props.auth.error.message}
                 </div>}
             </div>
         )
     }
 }
+const mapStateToProps = state => ({
+    auth: state.auth
+  });
+const mapDispatchToProps = dispatch => ({
+    register: (data) => dispatch(registrationAction(data))
+  });
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
 

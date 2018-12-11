@@ -2,7 +2,7 @@ export default {
     product: {
         name: 'Name',
         price: 'Price',
-        description: 'Description',
+        about: 'Description',
         add_product: 'Add product',
         edit_product: 'Edit product',
         products_list: 'Products list',

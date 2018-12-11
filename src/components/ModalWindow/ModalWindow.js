@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { I18n } from 'react-redux-i18n';
+import './style/modalWindow.scss';
 
 export default class ModalWindow extends Component {
 

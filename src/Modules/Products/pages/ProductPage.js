@@ -14,7 +14,7 @@ export default class ProductPage extends Component {
                         <h4 className="mb-0">{I18n.t('product.products_list')}</h4>
                         <Link to="/product/add" className="btn btn-success ml-auto">{I18n.t('product.add_product')}</Link>
                     </div>
-                    <Table columnNames={[I18n.t('product.name'), I18n.t('product.price'), I18n.t('product.description')]}/>
+                    <Table columnNames={[I18n.t('product.name'), I18n.t('product.price'), I18n.t('product.about')]}/>
                 </div>
             </div>
         </div>

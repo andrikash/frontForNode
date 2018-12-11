@@ -10,6 +10,6 @@ export default {
         password: 'Password',
         change_password: 'Change password',
         error: 'Wrong data!',
-        success: 'Success',
+        success: 'Successfully!',
     }
 }

@@ -10,6 +10,6 @@ export default {
         password: 'Пароль',
         change_password: 'Змінити пароль',
         error: 'Неправильні дані!',
-        success: 'Успіх',
+        success: 'Успішно!',
     }
 }

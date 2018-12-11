@@ -21,7 +21,7 @@ class ProductPage extends Component {
     }
     handleSubmit = () => {
         const { id }  = this.props.match.params;
-        const { productName, price, description } = this.state.currentProduct;
+        const { productName, price, about } = this.state.currentProduct;
         const { productUpdate, productAdd } = this.props;
 
         if(Boolean(id)) {
@@ -29,18 +29,17 @@ class ProductPage extends Component {
             return productUpdate(id,{
                 productName,
                 price,
-                about: description
+                about,
             })
         }
             return productAdd({
                 productName,
                 price,
-                about: description
+                about,
             })
         }
         changeState = (ev) => {
             const { name, value } = ev.target;
-
             this.setState(prevState => ({
                 ...prevState,
                 currentProduct: {
@@ -54,9 +53,9 @@ class ProductPage extends Component {
                 this.setState({ currentProduct: newProps.products.currentProduct })
             }
         }
-        
     render() {
     const { productName = null, price = null, about = null } = this.state.currentProduct || {};
+
         return (
             <div className="container col-4">
                     <div className="form-group">
@@ -83,12 +82,12 @@ class ProductPage extends Component {
                         >
                         </input>
 
-                        <label>{I18n.t('product.description')}</label>
+                        <label>{I18n.t('product.about')}</label>
                         <input
                             type="text"
-                            name="description"
+                            name="about"
                             className="form-control"
-                            placeholder={I18n.t('product.description')}
+                            placeholder={I18n.t('product.about')}
                         onChange={this.changeState}
                         value={about}
                         >

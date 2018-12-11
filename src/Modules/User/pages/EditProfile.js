@@ -55,10 +55,10 @@ class EditProfile extends Component {
     }
     render() {
         const { name, email, phone, dateOfBirth, about } = this.state.user || {};
-        const { error, passwordError } = this.props.user;
+        const { error, passwordError, userInfo } = this.props.user;
+        console.log('UserInfo > ', userInfo);
         return (
             <div className="container col-4">
-            
                 <h2>{I18n.t('user.edit_page')}</h2>
                     <div className="form-group">
                         <label>{I18n.t('user.name')}</label>

@@ -30,6 +30,7 @@ export const  userEditInfo = (id, data) => dispatch => {
             type: actionTypes.USER_EDIT_INFO_SUCCESS,
             payload: response.data
         });
+        
       }).catch((error) => {
         dispatch({
             type: actionTypes.USER_EDIT_INFO_ERROR,

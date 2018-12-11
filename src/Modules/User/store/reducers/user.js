@@ -2,9 +2,9 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     userInfo: null,
+    error: null,
     passwordInfo: null,
     passwordError: null,
-    error: null,
     loading: false,
 };
 
@@ -21,14 +21,14 @@ const reducer = (state = initialState, action) => {
                 userInfo: action.payload,
                 error: null,
                 loading: false,
-            }
+            };
         case actionTypes.USER_GET_ONE_ERROR:
             return {
                 ...state,
                 userInfo: null,
                 error: action.payload,
                 loading: false,
-            }
+            };
         case actionTypes.USER_EDIT_INFO_START:
             return {
                 ...state,
@@ -40,14 +40,14 @@ const reducer = (state = initialState, action) => {
                 userInfo: action.payload,
                 error: null,
                 loading: false,
-            }
+            };
         case actionTypes.USER_EDIT_INFO_ERROR:
             return {
                 ...state,
                 userInfo: null,
                 error: action.payload,
                 loading: false,
-            }
+            };
         case actionTypes.USER_CHANGE_PASWORD_START:
             return {
                 ...state,
@@ -59,14 +59,14 @@ const reducer = (state = initialState, action) => {
                 passwordInfo: action.payload,
                 passwordError: null,
                 loading: false,
-            }
+            };
         case actionTypes.USER_CHANGE_PASWORD_ERROR:
             return {
                 ...state,
                 passwordInfo: null,
                 passwordError: action.payload,
                 loading: false,
-            }
+            };
         default: 
             return state;
         }

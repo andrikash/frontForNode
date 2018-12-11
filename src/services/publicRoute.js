@@ -13,7 +13,7 @@ export default function PublicRoute({
         Boolean(localStorage.getItem('token')) === false ? (
           <Component {...props} {...rest}/>
         ) : (
-          <Redirect to="/editProfile" />
+          <Redirect to="/user/edit" />
         )
       }
     />

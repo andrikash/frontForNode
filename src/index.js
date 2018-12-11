@@ -2,24 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import thunk from 'redux-thunk';
+import { setLocale } from 'react-redux-i18n';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import * as serviceWorker from './serviceWorker';
+import store from './store/store';
 
-import authReducer from './store/reducers/auth';
-import productsReducer from './store/reducers/products';
-import userReducer from './store/reducers/user';
-
-const rootReducer = combineReducers({
-    auth: authReducer,
-    products: productsReducer,
-    user: userReducer,
+store.subscribe(()=>{
+    const state = store.getState();
+    const lang = state.i18n.locale;
+    if(lang !== localStorage.getItem('lang')){
+        localStorage.setItem('lang', lang);
+        store.dispatch(setLocale(lang));
+    }
 })
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSIONS_COMPOSE__ || compose;
-const store = createStore(rootReducer, composeEnhancers( applyMiddleware(thunk)));
-
 const app = (
     <Provider store={store}>
         <App />

@@ -38,6 +38,7 @@ const requests = {
 
 export const User = {
     login: (data) => requests.post('/auth/login', data),
+    logout: () => requests.get('/auth/logout'),
     register: (data) => requests.post('/auth/registration', data),
     currentUser: (id) => requests.get(`/users/${id}`),
     changePassword: (id,data) => requests.put(`/auth/changePassword/${id}`, data),

@@ -2,7 +2,7 @@ import authReducer from '../Modules/Auth/store/reducers/auth';
 import productsReducer from '../Modules/Products/store/reducers/products';
 import userReducer from '../Modules/User/store/reducers/user';
 import thunk from 'redux-thunk';
-import { translationObject } from '../helper/commonTranslationObj';
+import { translationObject } from '../utils/helper/commonTranslationObj';
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
@@ -22,5 +22,14 @@ store.dispatch(loadTranslations(translationObject()));
 const initLang = localStorage.getItem('lang') || 'uk';
 store.dispatch(setLocale(initLang));
 localStorage.setItem('lang', initLang);
+
+store.subscribe(()=>{
+    const state = store.getState();
+    const lang = state.i18n.locale;
+    if(lang !== localStorage.getItem('lang')){
+        localStorage.setItem('lang', lang);
+        store.dispatch(setLocale(lang));
+    }
+})
 
 export default store;

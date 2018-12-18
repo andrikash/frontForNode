@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import './tableRow.scss';
+import '../style/tableRow.scss';
 import { I18n } from 'react-redux-i18n';
 
 export default class TableRow extends Component {

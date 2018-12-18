@@ -14,14 +14,14 @@ export default class ModalWindow extends Component {
             <div className="modal-content">
                 <div className="modal-header">
                     <h5 className="modal-title">{ title }</h5>
-                    <button type="button" class="close" onClick={this.props.close} >
+                    <button type="button" className="close" onClick={this.props.close} >
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                     <p>{ text }</p>
                 </div>
-                <div class="modal-footer">
+                <div className="modal-footer">
                     <button onClick={ this.props.submit } className="btn btn-primary">{I18n.t('modal.delete')}</button>
                     <button onClick={ this.props.close } className="btn btn-secondary">{I18n.t('modal.close')}</button>
                 </div>

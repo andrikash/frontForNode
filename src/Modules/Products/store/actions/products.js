@@ -1,100 +1,105 @@
 import * as actionTypes from './actionTypes';
 import * as api from '../../../../utils/api';
 import history from '../../../../utils/history';
+import {createNotification} from '../../../../utils/notifications';
+import { action } from '../../../../utils/helper/action';
 
 
 export const productsAction = () => dispatch => {
-    dispatch({
-        type: actionTypes.PRODUCTS_FETCH_START,
-    });
+    dispatch(action(
+        actionTypes.PRODUCTS_FETCH_START,
+    ));
     return api.Product.getAllProducts()
         .then((response) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_FETCH_SUCCESS,
-            payload: response.data
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_FETCH_SUCCESS,
+            response.data
+        ));
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_FETCH_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_FETCH_ERROR,
+            error
+        ));
         }
       )
 }
 export const productsDelete = (id) => dispatch => {
-    dispatch({
-        type: actionTypes.PRODUCTS_DELETE_START,
-    });
+    dispatch(action(
+        actionTypes.PRODUCTS_DELETE_START,
+    ));
     return api.Product.deleteProduct(id)
         .then((response) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_DELETE_SUCCESS,
-            payload: response.data
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_DELETE_SUCCESS,
+            response.data
+        ));
         dispatch(productsAction());
+        createNotification('success');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_DELETE_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_DELETE_ERROR,
+            error
+        ));
         }
       )
 }
 export const productsGetOne = (id) => dispatch => {
-    dispatch({
-        type: actionTypes.PRODUCTS_GETONE_START,
-    });
+    dispatch(action(
+        actionTypes.PRODUCTS_GETONE_START,
+    ));
     return api.Product.currentProduct(id)
         .then((response) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_GETONE_SUCCESS,
-            payload: response.data
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_GETONE_SUCCESS,
+            response.data
+        ));
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_GETONE_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_GETONE_ERROR,
+            error
+        ));
         }
       )
 }
 export const productUpdate = (id, data) => dispatch => {
-    dispatch({
-        type: actionTypes.PRODUCTS_UPDATE_ONE_START,
-    });
+    dispatch(action(
+        actionTypes.PRODUCTS_UPDATE_ONE_START,
+    ));
     return api.Product.updateProduct(id, data)
         .then((response) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_UPDATE_ONE_SUCCESS,
-            payload: response.data
-        });
-        history.push("/products/page")
+        dispatch(action(
+            actionTypes.PRODUCTS_UPDATE_ONE_SUCCESS,
+            response.date
+        ));
+        history.push('/products/page');
+        createNotification('success');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.PRODUCTS_UPDATE_ONE_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.PRODUCTS_UPDATE_ONE_ERROR,
+            error
+        ));
+        createNotification('error');
         }
       )
 }
 export const productAdd = (data) => dispatch => {
-
-    console.log(data, 'INSIDE ACTION')
-    dispatch({
-        type: actionTypes.PRODUCT_ADD_START,
-    });
+    dispatch(action(
+        actionTypes.PRODUCT_ADD_START,
+    ));
     return api.Product.addProduct( data )
         .then((response) => {
-        dispatch({
-            type: actionTypes.PRODUCT_ADD_SUCCESS,
-            payload: response.data
-        });
+        dispatch(action(
+            actionTypes.PRODUCT_ADD_SUCCESS,
+            response.data
+        ));
         history.push('/products/page');
+        createNotification('success');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.PRODUCT_ADD_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.PRODUCT_ADD_ERROR,
+            error
+        ));
+        createNotification('error');
         }
       )
 

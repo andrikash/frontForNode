@@ -6,6 +6,5 @@ export default {
         password: 'Пароль',
         name: 'Ім\'я',
         error: 'Неправильні дані!',
-
     }
  }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import LoginPage from './Modules/Auth/pages/LoginPage';
 import RegisterPage  from './Modules/Auth/pages/RegisterPage';
-import Navbar from './components/Navbar/page/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import { Router, Switch } from 'react-router-dom';
 import EditProfile from './Modules/User/pages/EditProfile';
 import PublicRoute from './services/publicRoute';
@@ -12,6 +12,8 @@ import history from "./utils/history";
 import { setLocale } from 'react-redux-i18n';
 import { connect } from 'react-redux';
 import { I18n } from 'react-redux-i18n';
+import { NotificationContainer } from 'react-notifications';
+// import './setupTests';
 class App extends Component {
   constructor(){
     super();
@@ -27,7 +29,8 @@ class App extends Component {
     return (
       <div>
         <Navbar isLogged={Boolean(token)} changeLanguage={this.changeLanguage}></Navbar>
-      <div className="container col-12">
+        <div className="container col-12">
+        <NotificationContainer/>
         <Router history={ history }>
           <Switch>
             <PublicRoute path="/" exact component={ LoginPage } />

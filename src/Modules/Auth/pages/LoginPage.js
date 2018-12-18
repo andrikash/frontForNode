@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { I18n } from 'react-redux-i18n';
 import { loginAction } from '../store/actions/auth';
+import { logingFields } from '../constants/inputConstants';
 
 class Login extends Component {
   constructor(props){
@@ -11,12 +12,29 @@ class Login extends Component {
       email: null,
       password: null
     }
+    //move email, pass from state
   }
+  renderFields = (fields) => fields.map((field,i) => {
+    return (
+      <span key={i}>
+        <label>{I18n.t(field.label)}</label>
+            <input
+              type={field.type}
+              name={field.name}
+              className="form-control"
+              placeholder={I18n.t(field.label)}
+              onChange={this.handleChange}
+              required
+            >
+            </input>
+      </span>
+    );
+  })
    handleSubmit = () => {
     const { email, password } = this.state;
     const { login } = this.props;
-    if( email, password ){
-      login(email, password);
+    if( email && password ){
+      login({email, password});
     }
   }
   handleChange = (e) => {
@@ -31,46 +49,21 @@ class Login extends Component {
     return (
       <div className="container col-4">
           {
-            loading && <div>Loading...</div>
+            !!loading && <div>Loading...</div>
           }
         <h2>{I18n.t('auth.login')}</h2>
-          <div className="form-group">
-            <label>{I18n.t('auth.email')}</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              placeholder={I18n.t('auth.email')}
-              onChange={this.handleChange}
-              required
-            >
-            </input>
-                
-            <label>{I18n.t('auth.password')}</label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder={I18n.t('auth.password')}
-              onChange={this.handleChange}
-              required
-            >
-            </input>
-          </div>
-          <button type="button" className="btn btn-info mr-3" onClick={this.handleSubmit}>{I18n.t('auth.login')}</button>
-          <Link to="/registration" className="btn btn-primary">{I18n.t('auth.registration')}</Link>
-          {
-            this.props.auth.error && <div className="alert alert-danger mt-3">
-              Wrong data!
-            </div>
-          }
+        <div className="form-group">
+           { this.renderFields(logingFields) }
+        </div>
+        <button type="button" className="btn btn-info mr-3" onClick={this.handleSubmit}>{I18n.t('auth.login')}</button>
+        <Link to="/registration" className="btn btn-primary">{I18n.t('auth.registration')}</Link>
       </div>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth,
+const mapStateToProps = ({ auth }) => ({
+  auth,
 });
 
 const mapDispatchToProps = dispatch => ({

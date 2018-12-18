@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { productsAction, productsDelete } from '../../../Modules/Products/store/actions/products';
 import ModalWindow from '../../ModalWindow/ModalWindow';
 import { I18n } from 'react-redux-i18n';
-import '../style/tableRow.scss';
+// import '../style/tableRow.scss';
 
 class Table extends Component {
     constructor(props){
@@ -20,7 +20,7 @@ class Table extends Component {
         const { productsGetAll } = this.props;
           productsGetAll();
       }
-      openModal = (id, productName) => {
+    openModal = (id, productName) => {
 
           this.setState({
               activeProductId: id,
@@ -28,7 +28,7 @@ class Table extends Component {
               productName: productName,
           });
       }
-      closeModal = () => {
+    closeModal = () => {
         this.setState({
             modalIsOpen: false
         });
@@ -41,26 +41,42 @@ class Table extends Component {
             modalIsOpen: false
         })
     }
-  render() {
+    handleSubmit = () => {
+        return this.submitModal(this.state.activeProductId)
+    }
+    renderColumns = () => {
+        const { columnNames } = this.props;
+        return(
+            <>
+                {columnNames.map((name, i) =>
+                    <th key={i}>{name}</th>
+                )}
+            </>
+        )
+    }
+    renderTableRows = () => {
     const { products } = this.props;
+        return (
+            <>
+                {products.data.map((product) =>
+                    <TableRow key={product._id} {...product} deleteProduct={()=>this.openModal(product._id, product.productName)}/>
+                )}
+            </>
+        )
+    }
+  render() {
     return (
-        <div class="table-responsive">
-        <ModalWindow show={this.state.modalIsOpen} close={this.closeModal} submit={()=>this.submitModal(this.state.activeProductId)} title={I18n.t('modal.title', {product_name: this.state.productName})} text={I18n.t('modal.text')}/>
-        <table class="table table-bordred table-striped">
+        <div className="table-responsive">
+        <ModalWindow show={this.state.modalIsOpen} close={this.closeModal} submit={this.handleSubmit} title={I18n.t('modal.title', {product_name: this.state.productName})} text={I18n.t('modal.text')}/>
+        <table className="table table-bordred table-striped">
             <thead>
                 <tr>
-                    {
-                        this.props.columnNames.map((name) =>
-                            <th>{name}</th>
-                    )}
+                    {this.renderColumns()}
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                {
-                    products.data.map((product) =>
-                    <TableRow {...product} deleteProduct={()=>this.openModal(product._id, product.productName)}/>
-                )}
+                {this.renderTableRows()}
             </tbody> 
         </table> 
     </div>   

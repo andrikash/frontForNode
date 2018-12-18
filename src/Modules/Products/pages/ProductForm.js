@@ -2,15 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { productsGetOne, productUpdate, productAdd } from '../store/actions/products';
 import { I18n } from 'react-redux-i18n';
+import { fields } from '../constants/inputConstants';
+
 
 
 class ProductPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentProduct: null
+            currentProduct: {}
         }
     }
+    renderFields = (fields) => fields.map((field,i) => {
+        const value = this.state.currentProduct[field.name];
+            return(
+                <span key={i}>
+                    <label>{I18n.t(field.label)}</label>
+                        <input
+                        type={ field.type }
+                        name={ field.name }
+                        className="form-control"
+                        placeholder={ I18n.t(field.label) }
+                        onChange={ (e) => this.changeState(e) }
+                        value={ !!value ? value : '' }
+                            >
+                        </input>
+                </span>
+            )
+    })
     //Current product
     componentDidMount(){
         const { id } = this.props.match.params;
@@ -25,7 +44,7 @@ class ProductPage extends Component {
         const { productUpdate, productAdd } = this.props;
 
         if(Boolean(id)) {
-            const { productName, price, description } = this.state.currentProduct;
+            const { productName, price, about } = this.state.currentProduct;
             return productUpdate(id,{
                 productName,
                 price,
@@ -54,55 +73,20 @@ class ProductPage extends Component {
             }
         }
     render() {
-    const { productName = null, price = null, about = null } = this.state.currentProduct || {};
-
+        const { payload } = this.props;
         return (
             <div className="container col-4">
-                    <div className="form-group">
-                        <h2>{this.props.payload}</h2>
-                        <label>{I18n.t('product.name')}</label>
-                        <input
-                            type="text"
-                            name="productName"
-                            className="form-control"
-                            placeholder={I18n.t('product.name')}
-                        onChange={(e) => this.changeState(e)}
-                        value={productName}
-                        >
-                        </input>
-
-                        <label>{I18n.t('product.price')}</label>
-                        <input
-                            type="text"
-                            name="price"
-                            className="form-control"
-                            placeholder={I18n.t('product.price')}
-                        onChange={this.changeState}
-                        value={price}
-                        >
-                        </input>
-
-                        <label>{I18n.t('product.about')}</label>
-                        <input
-                            type="text"
-                            name="about"
-                            className="form-control"
-                            placeholder={I18n.t('product.about')}
-                        onChange={this.changeState}
-                        value={about}
-                        >
-                        </input>
-                        <button type="button" onClick={this.handleSubmit} className="btn btn-info mt-3">{this.props.payload}</button>
-                    </div>
-                    {
-                        this.props.products.error && <div className="alert alert-danger">{I18n.t('product.error')}</div>
-                    }
+                <div className="form-group">
+                    <h2>{payload}</h2>
+                    {this.renderFields(fields)}
+                    <button type="button" onClick={this.handleSubmit} className="btn btn-info mt-3">{payload}</button>
+                </div>
             </div>
         )
     }
 }
-const mapStateToProps = state => ({
-    products: state.products,
+const mapStateToProps = ({products}) => ({
+    products
   });
   
   const mapDispatchToProps = dispatch => ({

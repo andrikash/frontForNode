@@ -1,9 +1,9 @@
-import translationTable from '../components/TableComponents/translation/index';
-import translationModal from '../components/ModalWindow/translation/index';
-import translationNavbar from '../components/Navbar/translation/index';
-import translationAuth from '../Modules/Auth/translation/index';
-import translationProducts from '../Modules/Products/translation/index';
-import translationUser from '../Modules/User/translation/index';
+import translationTable from '../../components/TableComponents/translation/index';
+import translationModal from '../../components/ModalWindow/translation/index';
+import translationNavbar from '../../components/Navbar/translation/index';
+import translationAuth from '../../Modules/Auth/translation/index';
+import translationProducts from '../../Modules/Products/translation/index';
+import translationUser from '../../Modules/User/translation/index';
 
 export const concatTranslations = (...translations) => {
     const UK_LANGUAGE = 'uk';

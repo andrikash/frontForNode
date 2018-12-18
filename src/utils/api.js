@@ -4,7 +4,7 @@ import { API_URL } from '../constants/config';
 const requests = {
     get: (url) => {
             return axios.get(`${API_URL}${url}`, {
-                headers: { 
+                headers: {
                     Authorization: 'bearer ' + localStorage.getItem('token'),
                     'Content-Type': 'application/json',
                 }
@@ -12,7 +12,7 @@ const requests = {
     },
     post: (url, data) => {
             return axios.post(`${API_URL}${url}`, data, {
-                headers: { 
+                headers: {
                     Authorization: 'bearer ' + localStorage.getItem('token'),
                     'Content-Type': 'application/json',
                 }

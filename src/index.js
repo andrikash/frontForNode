@@ -1,20 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'react-notifications/lib/notifications.css';
 import './index.css';
 import App from './App';
-import { setLocale } from 'react-redux-i18n';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import store from './store/store';
 
-store.subscribe(()=>{
-    const state = store.getState();
-    const lang = state.i18n.locale;
-    if(lang !== localStorage.getItem('lang')){
-        localStorage.setItem('lang', lang);
-        store.dispatch(setLocale(lang));
-    }
-})
 const app = (
     <Provider store={store}>
         <App />

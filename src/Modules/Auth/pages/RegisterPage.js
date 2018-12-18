@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { I18n } from 'react-redux-i18n';
 import { registrationAction } from '../store/actions/auth';
+import { registrationFields } from '../constants/inputConstants';
 
 class RegisterPage extends Component {
     constructor(props) {
@@ -13,10 +14,26 @@ class RegisterPage extends Component {
             password: null,
         }
     }
-    handleSubmit = (ev) => {
+    renderFields = (fields) => fields.map((field,i) => {
+        return (
+            <span key={i}>
+                <label>{I18n.t(field.label)}</label>
+                        <input
+                            type={field.type}
+                            name={field.name}
+                            className="form-control"
+                            placeholder={I18n.t(field.label)}
+                            required
+                            onChange={this.handleChange}
+                        >
+                        </input>
+            </span>
+        )
+    })
+    handleSubmit = () => {
         const { name, email, password } = this.state;
         const { register } = this.props;
-        if(name, email, password) {
+        if(name && email && password) {
             register({name,email,password});
         }
     }
@@ -32,48 +49,11 @@ class RegisterPage extends Component {
         return (
             <div className="container col-4">
                 <h2>{I18n.t('auth.registration')}</h2>
-                
                     <div className="form-group">
-                        <label>{I18n.t('auth.name')}</label>
-                        <input
-                            type="test"
-                            name="name"
-                            className="form-control "
-                            placeholder={I18n.t('auth.name')}
-                            required
-                            onChange={this.handleChange}
-                        >
-                        </input>
-
-                        <label>{I18n.t('auth.email')}</label>
-                        <input
-                            type="email"
-                            name="email"
-                            className="form-control"
-                            placeholder={I18n.t('auth.name')}
-                            required
-                            onChange={this.handleChange}
-                        >
-                        </input>
-
-                        <label>{I18n.t('auth.password')}</label>
-                        <input
-                            type="password"
-                            name="password"
-                            className="form-control"
-                            placeholder={I18n.t('auth.password')}
-                            required
-                            onChange={this.handleChange}
-                        >
-                        </input>
+                        {this.renderFields(registrationFields)}
                     </div>
                     <button type="submit" className="btn btn-info mr-3" onClick={this.handleSubmit}>{I18n.t('auth.registration')}</button>
                     <Link to="/" className="btn btn-danger">{I18n.t('auth.login')}</Link>
-                
-                {/* Message for users */}
-                {this.props.auth.error && <div className="alert alert-danger mt-3" role="alert">
-                    Wrong data!
-                </div>}
             </div>
         )
     }

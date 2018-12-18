@@ -1,67 +1,65 @@
 import * as actionTypes from './actionTypes';
 import * as api from '../../../../utils/api';
 import history from '../../../../utils/history';
+import {createNotification} from '../../../../utils/notifications';
+import { action } from '../../../../utils/helper/action';
 
-export const loginAction = (email, password) => dispatch => {
-    dispatch({
-        type: actionTypes.LOGIN_START,
-    });
-    return api.User.login(
-        {email,
-        password}
-        )
+
+export const loginAction = (data) => dispatch => {
+    dispatch(action(
+        actionTypes.LOGIN_START,
+    ));
+    return api.User.login(data)
         .then((response) => {
+        dispatch(action(
+            actionTypes.LOGIN_SUCCESS, response.data
+            ));
         localStorage.setItem('currentID',response.data.user._id);
         localStorage.setItem('token',response.data.token);
-        dispatch({
-            type: actionTypes.LOGIN_SUCCESS,
-            payload: response.data,
-        });
         history.push('/user/edit');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.LOGIN_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.LOGIN_ERROR, error
+            ));
+        createNotification('error');
         }
       )
 }
 export const registrationAction = (data) => dispatch => {
-    dispatch({
-        type: actionTypes.REGISTRATION_START,
-    });
+    dispatch(action(
+        actionTypes.REGISTRATION_START,
+    ));
     return api.User.register(data)
         .then((response) => {
-        dispatch({
-            type: actionTypes.REGISTRATION_SUCCESS,
-            payload: response
-        });
-        history.push('/');
+            dispatch(action(
+                actionTypes.REGISTRATION_SUCCESS,
+                response));
+            history.push('/');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.REGISTRATION_ERROR,
-            payload: error
-        });
-        }
-      )
+            dispatch(action(
+                actionTypes.REGISTRATION_ERROR,
+                error
+            ));
+            createNotification('error');
+      })
 }
 export const logoutAction = () => dispatch => {
-    dispatch({
-        type: actionTypes.LOGOUT_START,
-    });
+    dispatch(action(
+        actionTypes.LOGOUT_START,
+    ));
     return api.User.logout()
         .then((response) => {
-        dispatch({
-            type: actionTypes.LOGOUT_SUCCESS,
-            payload: response
-        });
+        dispatch(action(
+            actionTypes.LOGOUT_SUCCESS,
+            response
+        ));
         localStorage.removeItem('token');
         history.push('/');
       }).catch((error) => {
-        dispatch({
-            type: actionTypes.LOGOUT_ERROR,
-            payload: error
-        });
+        dispatch(action(
+            actionTypes.LOGOUT_ERROR,
+            error
+        ));
         }
       )
 }

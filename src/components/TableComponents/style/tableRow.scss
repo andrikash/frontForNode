@@ -1,6 +1,7 @@
 td {
-    overflow: scroll;
-    /* text-overflow: ellipsis; */
+    // overflow: scroll;
+    word-break: break-all;
+    text-overflow: ellipsis; 
 }
 table {
     table-layout: fixed;
